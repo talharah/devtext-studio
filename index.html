@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevText Studio - 100% Private Developer Utilities & Converters</title>
+    <meta name="description" content="Free online developer utilities: JSON to CSV, JSON Formatter, Base64 Encoder, Slug Generator, Case Converter, Password & UUID Generators. 100% Client-Side processing.">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        },
+                        darkbg: '#0f172a',
+                        cardbg: '#1e293b',
+                        bordercolor: '#334155'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        code, textarea, input.code-font {
+            font-family: 'Fira Code', monospace;
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-darkbg text-slate-200 min-h-screen flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="border-b border-bordercolor bg-cardbg/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-brand-500/10 p-2 rounded-xl text-brand-500 border border-brand-500/20">
+                    <i class="fa-solid font-mono text-xl fa-code"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                        DevText <span class="text-brand-500 font-mono text-sm px-2 py-0.5 rounded bg-brand-500/10 border border-brand-500/20">Studio</span>
+                    </h1>
+                </div>
+            </div>
+            
+            <!-- Privacy Badge -->
+            <div class="hidden sm:flex items-center space-x-2 text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
+                <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                <span>100% Client-Side & Private</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+        
+        <!-- Top Info Banner -->
+        <div class="mb-6 p-4 rounded-xl bg-slate-800/60 border border-bordercolor flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-lg font-semibold text-white">Privacy-First Online Developer Tools</h2>
+                <p class="text-sm text-slate-400">Your data never leaves your browser. Zero server logs, 100% offline-ready utility suite.</p>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+                <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-check text-brand-500"></i> Instant Processing</span>
+                <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-check text-brand-500"></i> Free & Open Access</span>
+            </div>
+        </div>
+
+        <!-- Tool Selection Tabs -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-bordercolor pb-3 overflow-x-auto" id="toolTabs">
+            <button onclick="switchTool('json-csv')" id="tab-json-csv" class="tool-tab active px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center gap-2 bg-brand-500 text-slate-950 font-semibold shadow-lg shadow-brand-500/20">
+                <i class="fa-solid fa-file-csv"></i> JSON to CSV
+            </button>
+            <button onclick="switchTool('json-format')" id="tab-json-format" class="tool-tab px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-2">
+                <i class="fa-solid fa-code"></i> JSON Formatter
+            </button>
+            <button onclick="switchTool('base64')" id="tab-base64" class="tool-tab px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-2">
+                <i class="fa-solid fa-lock"></i> Base64 Encoder
+            </button>
+            <button onclick="switchTool('slug')" id="tab-slug" class="tool-tab px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-2">
+                <i class="fa-solid fa-link"></i> URL Slug
+            </button>
+            <button onclick="switchTool('case')" id="tab-case" class="tool-tab px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-2">
+                <i class="fa-solid fa-[#]"></i> Case Converter
+            </button>
+            <button onclick="switchTool('password')" id="tab-password" class="tool-tab px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-2">
+                <i class="fa-solid fa-key"></i> Password Generator
+            </button>
+            <button onclick="switchTool('uuid')" id="tab-uuid" class="tool-tab px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-2">
+                <i class="fa-solid fa-fingerprint"></i> UUID Generator
+            </button>
+        </div>
+
+        <!-- Notification Toast -->
+        <div id="toast" class="hidden fixed bottom-6 right-6 bg-emerald-600 text-white px-4 py-3 rounded-lg shadow-xl text-sm font-medium flex items-center gap-2 z-50 animate-bounce">
+            <i class="fa-solid fa-circle-check"></i> <span id="toastMsg">Copied to clipboard!</span>
+        </div>
+
+        <!-- TOOL 1: JSON to CSV -->
+        <section id="tool-json-csv" class="tool-container space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Input -->
+                <div class="bg-cardbg rounded-xl p-5 border border-bordercolor flex flex-col space-y-3">
+                    <div class="flex justify-between items-center">
+                        <label class="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                            <i class="fa-solid fa-brackets-curly text-brand-500"></i> Input JSON Array
+                        </label>
+                        <button onclick="loadSampleJSON()" class="text-xs text-brand-500 hover:text-brand-400 underline">Load Sample</button>
+                    </div>
+                    <textarea id="jsonCsvInput" placeholder='[{"name": "Alice", "role": "Developer", "age": 28}, {"name": "Bob", "role": "Designer", "age": 32}]' class="w-full h-80 p-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none resize-none"></textarea>
+                    <div class="flex justify-between items-center pt-2">
+                        <button onclick="convertJsonToCsv()" class="bg-brand-600 hover:bg-brand-500 text-white px-5 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-lg shadow-brand-600/30">
+                            <i class="fa-solid fa-bolt"></i> Convert to CSV
+                        </button>
+                        <button onclick="clearField('jsonCsvInput', 'csvOutput')" class="text-xs text-slate-400 hover:text-slate-200">Clear</button>
+                    </div>
+                </div>
+                <!-- Output -->
+                <div class="bg-cardbg rounded-xl p-5 border border-bordercolor flex flex-col space-y-3">
+                    <div class="flex justify-between items-center">
+                        <label class="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                            <i class="fa-solid fa-table text-emerald-400"></i> Output CSV
+                        </label>
+                        <button onclick="copyToClipboard('csvOutput')" class="text-xs text-brand-500 hover:underline flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <textarea id="csvOutput" readonly placeholder="Resulting CSV will appear here..." class="w-full h-80 p-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 text-xs focus:outline-none resize-none" readOnly></textarea>
+                    <div class="flex justify-end pt-2">
+                        <button onclick="downloadFile('csvOutput', 'data.csv', 'text/csv')" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i> Download CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEO Content & FAQ -->
+            <div class="bg-cardbg/40 border border-bordercolor rounded-xl p-6 mt-8 space-y-4">
+                <h3 class="text-lg font-bold text-white">About Online JSON to CSV Converter</h3>
+                <p class="text-sm text-slate-400 leading-relaxed">
+                    Convert structured JSON arrays into CSV (Comma Separated Values) format instantly. Ideal for developers, data analysts, and researchers needing to import web data into Microsoft Excel, Google Sheets, or relational databases.
+                </p>
+                <div class="border-t border-slate-700/50 pt-4 space-y-3">
+                    <h4 class="text-md font-semibold text-slate-200">Frequently Asked Questions</h4>
+                    <details class="text-xs text-slate-400 bg-slate-900/50 p-3 rounded-lg border border-slate-800">
+                        <summary class="font-medium text-slate-300 cursor-pointer">Is my JSON data safe when converting on this site?</summary>
+                        <p class="mt-2 text-slate-400">Yes! DevText Studio runs 100% client-side inside your browser. Your JSON payload is never transmitted to any external server or API endpoint.</p>
+                    </details>
+                    <details class="text-xs text-slate-400 bg-slate-900/50 p-3 rounded-lg border border-slate-800">
+                        <summary class="font-medium text-slate-300 cursor-pointer">What structure must the JSON input have?</summary>
+                        <p class="mt-2 text-slate-400">The JSON input should be a valid JSON array of objects. Keys from the objects are used to construct the CSV headers automatically.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOOL 2: JSON Formatter & Minifier -->
+        <section id="tool-json-format" class="tool-container space-y-6 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-cardbg rounded-xl p-5 border border-bordercolor flex flex-col space-y-3">
+                    <div class="flex justify-between items-center">
+                        <label class="text-sm font-semibold text-slate-300">Raw JSON Input</label>
+                        <button onclick="loadSampleRawJson()" class="text-xs text-brand-500 hover:underline">Load Sample</button>
+                    </div>
+                    <textarea id="jsonFormatInput" placeholder='{"name":"DevText","features":["JSON","CSV","Base64"],"active":true}' class="w-full h-80 p-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none resize-none"></textarea>
+                    <div class="flex gap-3 pt-2">
+                        <button onclick="formatJson(2)" class="bg-brand-600 hover:bg-brand-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Beautify (2 Spaces)</button>
+                        <button onclick="minifyJson()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Minify JSON</button>
+                    </div>
+                </div>
+                <div class="bg-cardbg rounded-xl p-5 border border-bordercolor flex flex-col space-y-3">
+                    <div class="flex justify-between items-center">
+                        <label class="text-sm font-semibold text-slate-300">Formatted Output</label>
+                        <button onclick="copyToClipboard('jsonFormatOutput')" class="text-xs text-brand-500 hover:underline flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <textarea id="jsonFormatOutput" readonly placeholder="Formatted or Minified JSON will appear here..." class="w-full h-80 p-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 text-xs focus:outline-none resize-none"></textarea>
+                </div>
+            </div>
+
+            <!-- SEO Content -->
+            <div class="bg-cardbg/40 border border-bordercolor rounded-xl p-6 mt-8 space-y-4">
+                <h3 class="text-lg font-bold text-white">Online JSON Formatter & Minifier</h3>
+                <p class="text-sm text-slate-400">Validate, clean, beautify, or compress raw JSON snippets. This tool formats minified API responses into clean tree structures or compresses bloated JSON to reduce file transfer payload size.</p>
+            </div>
+        </section>
+
+        <!-- TOOL 3: Base64 Encoder/Decoder -->
+        <section id="tool-base64" class="tool-container space-y-6 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-cardbg rounded-xl p-5 border border-bordercolor flex flex-col space-y-3">
+                    <label class="text-sm font-semibold text-slate-300">Input Text or Base64</label>
+                    <textarea id="base64Input" placeholder="Enter plain text to encode OR Base64 string to decode..." class="w-full h-80 p-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none resize-none"></textarea>
+                    <div class="flex gap-3 pt-2">
+                        <button onclick="processBase64('encode')" class="bg-brand-600 hover:bg-brand-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Encode Base64</button>
+                        <button onclick="processBase64('decode')" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Decode Base64</button>
+                    </div>
+                </div>
+                <div class="bg-cardbg rounded-xl p-5 border border-bordercolor flex flex-col space-y-3">
+                    <div class="flex justify-between items-center">
+                        <label class="text-sm font-semibold text-slate-300">Base64 Output</label>
+                        <button onclick="copyToClipboard('base64Output')" class="text-xs text-brand-500 hover:underline flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <textarea id="base64Output" readonly placeholder="Output string will appear here..." class="w-full h-80 p-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 text-xs focus:outline-none resize-none"></textarea>
+                </div>
+            </div>
+
+            <!-- SEO Content -->
+            <div class="bg-cardbg/40 border border-bordercolor rounded-xl p-6 mt-8 space-y-4">
+                <h3 class="text-lg font-bold text-white">Client-Side Base64 Encoder & Decoder</h3>
+                <p class="text-sm text-slate-400">Safely encode ASCII data into UTF-8 Base64 or decode Base64 strings back to legible plaintext format. Useful for web basic auth header generation and data URI handling.</p>
+            </div>
+        </section>
+
+        <!-- TOOL 4: URL Slug Generator -->
+        <section id="tool-slug" class="tool-container space-y-6 hidden">
+            <div class="bg-cardbg rounded-xl p-5 border border-bordercolor max-w-3xl mx-auto space-y-4">
+                <label class="text-sm font-semibold text-slate-300">Enter Title or Headline</label>
+                <input type="text" id="slugInput" oninput="generateSlug()" placeholder="e.g., 10 Essential JavaScript Tips for Senior Developers in 2026!" class="w-full p-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                
+                <div class="space-y-2 pt-2">
+                    <label class="text-xs text-slate-400 font-medium">Generated SEO Slug</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="slugOutput" readonly class="w-full p-3 bg-slate-950 border border-slate-800 rounded-lg text-brand-400 text-sm font-mono focus:outline-none" readOnly>
+                        <button onclick="copyToClipboard('slugOutput')" class="bg-brand-600 hover:bg-brand-500 text-white px-5 rounded-lg text-sm font-medium transition flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEO Content -->
+            <div class="bg-cardbg/40 border border-bordercolor rounded-xl p-6 mt-8 space-y-4 max-w-3xl mx-auto">
+                <h3 class="text-lg font-bold text-white">SEO Friendly URL Slug Generator</h3>
+                <p class="text-sm text-slate-400">Convert article titles into clean, lowercase, hyphen-separated SEO URLs. Strips out special characters, accents, and unwanted punctuation automatically.</p>
+            </div>
+        </section>
+
+        <!-- TOOL 5: String Case Converter -->
+        <section id="tool-case" class="tool-container space-y-6 hidden">
+            <div class="bg-cardbg rounded-xl p-5 border border-bordercolor space-y-4">
+                <label class="text-sm font-semibold text-slate-300">Input String</label>
+                <textarea id="caseInput" oninput="convertCases()" placeholder="Type or paste text here to see real-time case transformations..." class="w-full h-32 p-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none resize-none"></textarea>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 flex justify-between items-center">
+                        <div>
+                            <span class="text-xs text-slate-400 block">camelCase</span>
+                            <span id="camelCaseOut" class="text-sm font-mono text-emerald-400"></span>
+                        </div>
+                        <button onclick="copyText('camelCaseOut')" class="text-xs text-slate-400 hover:text-brand-500"><i class="fa-regular fa-copy"></i></button>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 flex justify-between items-center">
+                        <div>
+                            <span class="text-xs text-slate-400 block">snake_case</span>
+                            <span id="snakeCaseOut" class="text-sm font-mono text-emerald-400"></span>
+                        </div>
+                        <button onclick="copyText('snakeCaseOut')" class="text-xs text-slate-400 hover:text-brand-500"><i class="fa-regular fa-copy"></i></button>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 flex justify-between items-center">
+                        <div>
+                            <span class="text-xs text-slate-400 block">kebab-case</span>
+                            <span id="kebabCaseOut" class="text-sm font-mono text-emerald-400"></span>
+                        </div>
+                        <button onclick="copyText('kebabCaseOut')" class="text-xs text-slate-400 hover:text-brand-500"><i class="fa-regular fa-copy"></i></button>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 flex justify-between items-center">
+                        <div>
+                            <span class="text-xs text-slate-400 block">PascalCase</span>
+                            <span id="pascalCaseOut" class="text-sm font-mono text-emerald-400"></span>
+                        </div>
+                        <button onclick="copyText('pascalCaseOut')" class="text-xs text-slate-400 hover:text-brand-500"><i class="fa-regular fa-copy"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOOL 6: Password Generator -->
+        <section id="tool-password" class="tool-container space-y-6 hidden">
+            <div class="bg-cardbg rounded-xl p-6 border border-bordercolor max-w-xl mx-auto space-y-6">
+                <div class="flex gap-2">
+                    <input type="text" id="passOutput" readonly class="w-full p-4 bg-slate-950 border border-slate-800 rounded-lg text-emerald-400 text-lg font-mono text-center tracking-wider focus:outline-none" readOnly>
+                    <button onclick="copyToClipboard('passOutput')" class="bg-brand-600 hover:bg-brand-500 text-white px-5 rounded-lg text-sm font-semibold transition">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold text-slate-300 mb-2">
+                            <span>Password Length</span>
+                            <span id="passLengthVal" class="text-brand-400">16</span>
+                        </div>
+                        <input type="range" id="passLength" min="8" max="64" value="16" oninput="document.getElementById('passLengthVal').innerText = this.value; generatePassword();" class="w-full accent-brand-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 text-xs text-slate-300">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="chkUpper" checked onchange="generatePassword()" class="rounded accent-brand-500"> Uppercase (A-Z)
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="chkLower" checked onchange="generatePassword()" class="rounded accent-brand-500"> Lowercase (a-z)
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="chkNums" checked onchange="generatePassword()" class="rounded accent-brand-500"> Numbers (0-9)
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="chkSymbols" checked onchange="generatePassword()" class="rounded accent-brand-500"> Symbols (!@#$)
+                        </label>
+                    </div>
+
+                    <button onclick="generatePassword()" class="w-full bg-slate-700 hover:bg-slate-600 text-white py-2.5 rounded-lg text-sm font-semibold transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrows-rotate"></i> Regenerate Password
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOOL 7: UUID Generator -->
+        <section id="tool-uuid" class="tool-container space-y-6 hidden">
+            <div class="bg-cardbg rounded-xl p-6 border border-bordercolor max-w-xl mx-auto space-y-6 text-center">
+                <div class="space-y-2">
+                    <label class="text-xs text-slate-400">Cryptographically Secure UUID v4</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="uuidOutput" readonly class="w-full p-4 bg-slate-950 border border-slate-800 rounded-lg text-emerald-400 text-base font-mono text-center focus:outline-none" readOnly>
+                        <button onclick="copyToClipboard('uuidOutput')" class="bg-brand-600 hover:bg-brand-500 text-white px-5 rounded-lg text-sm font-semibold transition">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button onclick="generateUUID()" class="bg-slate-700 hover:bg-slate-600 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition flex items-center justify-center gap-2 mx-auto">
+                    <i class="fa-solid fa-plus"></i> Generate New UUID
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-bordercolor bg-cardbg py-6 mt-12 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p>© 2026 DevText Studio. Built for privacy, speed, and efficiency.</p>
+            <div class="flex space-x-4">
+                <span class="text-slate-400">100% Client-Side Executed</span>
+                <span>•</span>
+                <span class="text-slate-400">Zero Server Data Collection</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Core JavaScript Operations -->
+    <script>
+        // Tab Navigation Switcher
+        function switchTool(toolId) {
+            // Hide all tool containers
+            document.querySelectorAll('.tool-container').forEach(el => el.classList.add('hidden'));
+            
+            // Reset tab styles
+            document.querySelectorAll('.tool-tab').forEach(el => {
+                el.classList.remove('bg-brand-500', 'text-slate-950', 'font-semibold', 'shadow-lg', 'shadow-brand-500/20');
+                el.classList.add('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-800');
+            });
+
+            // Show selected container
+            document.getElementById('tool-' + toolId).classList.remove('hidden');
+
+            // Highlight active tab
+            const activeTab = document.getElementById('tab-' + toolId);
+            activeTab.classList.remove('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-800');
+            activeTab.classList.add('bg-brand-500', 'text-slate-950', 'font-semibold', 'shadow-lg', 'shadow-brand-500/20');
+
+            // Trigger defaults for specific tools
+            if(toolId === 'password') generatePassword();
+            if(toolId === 'uuid') generateUUID();
+        }
+
+        // Notification Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2500);
+        }
+
+        // Copy Helper
+        function copyToClipboard(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el.value) return;
+            el.select();
+            document.execCommand('copy');
+            showToast('Copied to clipboard!');
+        }
+
+        function copyText(elementId) {
+            const txt = document.getElementById(elementId).innerText;
+            if (!txt) return;
+            const temp = document.createElement('textarea');
+            temp.value = txt;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            showToast('Copied to clipboard!');
+        }
+
+        // Clear Helper
+        function clearField(inputId, outputId) {
+            document.getElementById(inputId).value = '';
+            document.getElementById(outputId).value = '';
+        }
+
+        // Download Helper
+        function downloadFile(elementId, filename, type) {
+            const content = document.getElementById(elementId).value;
+            if (!content) return;
+            const blob = new Blob([content], { type: type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 1. JSON to CSV Logic
+        function convertJsonToCsv() {
+            const input = document.getElementById('jsonCsvInput').value.trim();
+            if (!input) {
+                alert('Please enter valid JSON array data.');
+                return;
+            }
+
+            try {
+                const parsedData = JSON.parse(input);
+                if (!Array.isArray(parsedData) || parsedData.length === 0) {
+                    alert('JSON input must be a non-empty array of objects.');
+                    return;
+                }
+
+                // Extract Headers
+                const headers = Array.from(new Set(parsedData.flatMap(obj => Object.keys(obj))));
+                
+                // Build CSV Rows
+                const csvRows = [];
+                csvRows.push(headers.join(',')); // Header row
+
+                for (const row of parsedData) {
+                    const values = headers.map(header => {
+                        const val = row[header] === undefined || row[header] === null ? '' : row[header];
+                        // Escape quotes and commas
+                        const escaped = ('' + val).replace(/"/g, '""');
+                        return `"${escaped}"`;
+                    });
+                    csvRows.push(values.join(','));
+                }
+
+                document.getElementById('csvOutput').value = csvRows.join('\n');
+            } catch (err) {
+                alert('Invalid JSON Syntax: ' + err.message);
+            }
+        }
+
+        function loadSampleJSON() {
+            const sample = [
+                { "id": 101, "name": "Talha Rahman", "role": "Software Engineer", "status": "Active" },
+                { "id": 102, "name": "Sarah Connor", "role": "DevOps Architect", "status": "Pending" },
+                { "id": 103, "name": "Alex Mercer", "role": "UI/UX Designer", "status": "Active" }
+            ];
+            document.getElementById('jsonCsvInput').value = JSON.stringify(sample, null, 2);
+        }
+
+        // 2. JSON Formatter & Minifier Logic
+        function formatJson(indent) {
+            const input = document.getElementById('jsonFormatInput').value.trim();
+            if(!input) return;
+            try {
+                const obj = JSON.parse(input);
+                document.getElementById('jsonFormatOutput').value = JSON.stringify(obj, null, indent);
+            } catch (err) {
+                alert('Invalid JSON: ' + err.message);
+            }
+        }
+
+        function minifyJson() {
+            const input = document.getElementById('jsonFormatInput').value.trim();
+            if(!input) return;
+            try {
+                const obj = JSON.parse(input);
+                document.getElementById('jsonFormatOutput').value = JSON.stringify(obj);
+            } catch (err) {
+                alert('Invalid JSON: ' + err.message);
+            }
+        }
+
+        function loadSampleRawJson() {
+            document.getElementById('jsonFormatInput').value = '{"project":"DevText Studio","version":1.0,"features":["JSON to CSV","Base64","Password Gen"],"isPrivate":true}';
+        }
+
+        // 3. Base64 Encoder/Decoder
+        function processBase64(mode) {
+            const input = document.getElementById('base64Input').value;
+            if(!input) return;
+            try {
+                if (mode === 'encode') {
+                    document.getElementById('base64Output').value = btoa(unescape(encodeURIComponent(input)));
+                } else {
+                    document.getElementById('base64Output').value = decodeURIComponent(escape(atob(input)));
+                }
+            } catch (err) {
+                alert('Error processing Base64: ' + err.message);
+            }
+        }
+
+        // 4. URL Slug Generator
+        function generateSlug() {
+            const txt = document.getElementById('slugInput').value;
+            const slug = txt
+                .toLowerCase()
+                .trim()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/[\s_-]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            document.getElementById('slugOutput').value = slug;
+        }
+
+        // 5. Case Converter
+        function convertCases() {
+            const txt = document.getElementById('caseInput').value;
+            if (!txt) {
+                document.getElementById('camelCaseOut').innerText = '';
+                document.getElementById('snakeCaseOut').innerText = '';
+                document.getElementById('kebabCaseOut').innerText = '';
+                document.getElementById('pascalCaseOut').innerText = '';
+                return;
+            }
+
+            const words = txt.replace(/[^a-zA-Z0-9 ]/g, " ").trim().split(/\s+/);
+
+            // camelCase
+            const camel = words.map((w, i) => i === 0 ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
+            // snake_case
+            const snake = words.map(w => w.toLowerCase()).join('_');
+            // kebab-case
+            const kebab = words.map(w => w.toLowerCase()).join('-');
+            // PascalCase
+            const pascal = words.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
+
+            document.getElementById('camelCaseOut').innerText = camel;
+            document.getElementById('snakeCaseOut').innerText = snake;
+            document.getElementById('kebabCaseOut').innerText = kebab;
+            document.getElementById('pascalCaseOut').innerText = pascal;
+        }
+
+        // 6. Password Generator
+        function generatePassword() {
+            const len = parseInt(document.getElementById('passLength').value);
+            const useUpper = document.getElementById('chkUpper').checked;
+            const useLower = document.getElementById('chkLower').checked;
+            const useNums = document.getElementById('chkNums').checked;
+            const useSymbols = document.getElementById('chkSymbols').checked;
+
+            let chars = '';
+            if (useUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (useLower) chars += 'abcdefghijklmnopqrstuvwxyz';
+            if (useNums) chars += '0123456789';
+            if (useSymbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+            if (!chars) {
+                document.getElementById('passOutput').value = 'Select at least 1 option';
+                return;
+            }
+
+            let password = '';
+            const array = new Uint32Array(len);
+            window.crypto.getRandomValues(array);
+            for (let i = 0; i < len; i++) {
+                password += chars[array[i] % chars.length];
+            }
+
+            document.getElementById('passOutput').value = password;
+        }
+
+        // 7. UUID Generator (v4)
+        function generateUUID() {
+            const uuid = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+            );
+            document.getElementById('uuidOutput').value = uuid;
+        }
+    </script>
+</body>
+</html>
